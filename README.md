@@ -6,28 +6,28 @@ L'objectiu d'aquest projecte és desenvolupar una aplicació web d'enquesta d'au
 ## Memòria i Decisions Tècniques 🛠️
 
 - **Stack Tecnològic Pur:** S'ha desenvolupat la solució utilitzant exclusivament **HTML5, CSS3 i JavaScript (Vanilla)** de manera estricta, sense incloure cap llibreria ni framework extern (com React, TailwindCSS o Bootstrap).
-- **Estètica i Disseny UI/UX Modern:** 
-  - S'ha establert un sistema de disseny mitjançant l'ús de **Variables CSS (`:root`)**, el que permet coherència visual.
-  - S'han inclòs dissenys *card-based* amb ombres suaus, colors clars i fons moderns (glassmorphism/clean design).
-  - La UI inclou un sistema de notificacions dinàmics tipus "Toast" per a la retroalimentació visual de l'usuari.
-- **Gràfics Dinàmics Sense Llibreries (Chart.js):** Per complir amb la condició de no usar tecnologies addicionals, s'ha abordat la creació dels gràfics de "quesito" mitjançant **lògica matemàtica en JavaScript que genera un `conic-gradient` de CSS**. Aquest s'actualitza reactivament segons les valoracions emeses.
-- **Arquitectura JavaScript Reactiva:** El codi de `app.js` gestiona l'estat localitzat en un *Array* d'objectes. Qualsevol interacció de l'usuari (enviar formulari o canviar el selector de filtre de grup) dispara una re-renderització asíncrona a la funció principal `updateDashboard()`, actualitzant únicament la informació processada a les gràfiques de barres, les targetes de respostes i els KPIs.
+- **Estètica i Disseny UI/UX Clàssic:** 
+  - S'ha replicat exactament la interfície sol·licitada a l'enunciat, apostant per un disseny clàssic, net i estructurat en blocs (tipus targetes).
+  - El fons principal gris clar (`#f8f9fa`) fa ressaltar els panells d'informació amb fons blanc, atorgant un contrast suau i professional.
+- **Gràfics Dinàmics Sense Llibreries Externes:** Per complir amb la condició de no usar tecnologies addicionals tipus Chart.js, s'ha abordat la creació dels gràfics de "quesito" mitjançant **lògica en JavaScript que genera un `conic-gradient` de CSS**.
+- **Arquitectura JavaScript Reactiva:** El codi de `app.js` gestiona l'estat en un *Array* global. Qualsevol interacció de l'usuari (guardar un vot o canviar el filtre) crida a `updateDashboard()`, que s'encarrega d'esborrar i regenerar dinàmicament el DOM per mostrar les estadístiques sempre actualitzades.
 
-## Estat de les Històries d'Usuari (Scrum) 📋
+## Planificació i Estat dels Sprints (Scrum) 📋
 
-S'han completat satisfactòriament totes les funcionalitats "Core" de nivell local requerides al *backlog*:
+El desenvolupament s'ha organitzat i dut a terme seguint la següent planificació per sprints:
 
-- ✅ **US-01:** Formulari d'enviament de valoració (1-5) amb confirmació visual.
-- ✅ **US-02:** Capacitat d'afegir comentaris opcionals que apareixen reflectits a l'analítica.
-- ✅ **US-03:** Selecció i categorització de grup (DAW1A, DAW1B, ASIX1).
-- ✅ **US-04:** Panell de KPIs (Respostes, Mitjana matemàtica global, % de positius (4-5)).
-- ✅ **US-05:** Distribució estadística dissenyada mitjançant gràfiques de barres reactives i "quesitos" (pastís).
-- ✅ **US-06:** Comparativa constant de mitjanes entre grups mitjançant la gràfica respectiva.
-- ✅ **US-07:** Segmentació i filtratge complet de respostes, mostrant targetes acolorides segons si el comentari conté un vot positiu (verd), neutral (groc) o negatiu (vermell).
-- ✅ **US-08:** Iniciat i preparat un ecosistema de versionat de codi amb Git, documentant les *User Stories* mitjançant la creació de les seves respectives branques d'estructura funcional.
+### Sprint 1
+- ✅ **US-01:** Formulari d'enviament de valoració (1-5) perquè el docent conegui la satisfacció.
+- ✅ **US-02:** Capacitat d'afegir comentaris opcionals que aporten context a la puntuació.
+- ✅ **US-03:** Selecció de grup (DAW1A, DAW1B, ASIX1) per vincular les respostes.
 
-## Millores Pendents i Propers Passos (Cloud) ☁️
+### Sprint 2
+- ✅ **US-04:** Quadre de KPIs superiors per interpretar ràpid (Respostes, Mitjana, % positives).
+- ✅ **US-05:** Distribució de puntuacions en gràfiques de barres horitzontals i "quesitos" (pastís).
+- ✅ **US-06:** Gràfica comparativa de mitjanes entre els diferents grups per prendre decisions.
+- ✅ **US-07:** Llistat de respostes d'un grup concret (amb disseny de targetes segons valoració).
 
-D'acord amb els requisits i instruments següents del projecte (IA3 i IA5), la plataforma s'escalarà de la següent manera:
-1. **US-09 (Desplegament al Núvol):** Pujar el codi i configurar la branca `main` a **Vercel** per tal de proveir accessibilitat pública a la solució i permetre l'avaluació externa.
-2. **US-10 (Persistència Real amb BD):** Substituir l'emulació per defecte de l'Array en local introduint crides asíncrones a l'API de **Supabase**, evitant que les dades s'esborrin quan la sessió de la finestra s'acaba de recarregar.
+### Sprint 3
+- ✅ **US-08:** Mantenir codi clar i versionat en repositori amb branques per cada història.
+- ⏳ **US-09:** Desplegament al núvol per compartir la solució (Es farà amb Vercel - IA3).
+- ⏳ **US-10:** Integració de Supabase per passar de dades locals a persistència real (Es farà a IA5).
