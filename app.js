@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                 }
             }
-            pieScores.style.background = \`conic-gradient(\${gradientParts.join(', ')})\`;
+            pieScores.style.background = `conic-gradient(${gradientParts.join(', ')})`;
         } else {
             pieScores.style.background = 'conic-gradient(#e2e8f0 0% 100%)';
             legendScores.innerHTML = '<span>Sense dades</span>';
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const posPerc = (posCount / total) * 100;
             const negPerc = (negCount / total) * 100;
 
-            piePos.style.background = \`conic-gradient(#22c55e 0% \${posPerc}%, #f97316 \${posPerc}% 100%)\`;
+            piePos.style.background = `conic-gradient(#22c55e 0% ${posPerc}%, #f97316 ${posPerc}% 100%)`;
             
             legendPos.innerHTML = `
                 <div class="legend-item">
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="response-group">${s.group}</span>
                     <span class="response-rating">Puntuació: ${s.rating}/5</span>
                 </div>
-                ${s.comment ? \`<p class="response-comment"><strong>Comentari:</strong> \${s.comment}</p>\` : ''}
+                ${s.comment ? `<p class="response-comment"><strong>Comentari:</strong> ${s.comment}</p>` : ''}
             `;
             container.appendChild(card);
         });
