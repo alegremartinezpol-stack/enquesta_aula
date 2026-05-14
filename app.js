@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial data matching the screenshot for DAW1A
+    // Initial data matching the screenshot exactly
     let surveys = [
-        { group: 'DAW1A', rating: 2, comment: '' },
-        { group: 'DAW1A', rating: 2, comment: '' },
-        { group: 'DAW1A', rating: 3, comment: 'Em va costar la part de gràfics.' },
-        { group: 'DAW1A', rating: 3, comment: '' },
-        { group: 'DAW1A', rating: 3, comment: '' },
         { group: 'DAW1A', rating: 4, comment: 'La part de conclusions és interessant.' },
+        { group: 'DAW1A', rating: 3, comment: 'Em va costar la part de gràfics.' },
         { group: 'DAW1A', rating: 4, comment: '' },
-        { group: 'DAW1A', rating: 4, comment: '' },
-        { group: 'DAW1A', rating: 4, comment: '' },
-        { group: 'DAW1A', rating: 5, comment: 'Molt bona sessió' },
         { group: 'DAW1A', rating: 5, comment: '' },
         { group: 'DAW1A', rating: 5, comment: '' },
+        { group: 'DAW1A', rating: 5, comment: '' },
+        { group: 'DAW1A', rating: 4, comment: '' },
+        { group: 'DAW1A', rating: 4, comment: '' },
+        { group: 'DAW1A', rating: 3, comment: '' },
+        { group: 'DAW1A', rating: 3, comment: '' },
+        { group: 'DAW1A', rating: 2, comment: '' },
+        { group: 'DAW1A', rating: 2, comment: '' },
         
         { group: 'DAW1B', rating: 4, comment: 'Bé.' },
         { group: 'DAW1B', rating: 3, comment: 'Normal.' },
@@ -21,17 +21,16 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const groups = ['DAW1A', 'DAW1B', 'ASIX1'];
+    
     let currentFilter = 'DAW1A';
 
-    // DOM Elements
     const form = document.getElementById('survey-form');
     const filterSelect = document.getElementById('filter-group');
-    const toast = document.getElementById('toast');
     
-    // Initialize Dashboard with starting filter
+    filterSelect.value = currentFilter;
+    
     updateDashboard();
 
-    // Event Listener for the form submission
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         
@@ -39,36 +38,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const rating = parseInt(document.getElementById('rating').value);
         const comment = document.getElementById('comments').value;
 
-        // Add new response to the beginning
         surveys.unshift({ group, rating, comment });
         
-        // Reset form but keep the selected group
         form.reset();
         document.getElementById('group-select').value = group;
         
-        // Show success notification
-        showToast();
-        
-        // Update all visual elements
         updateDashboard();
     });
 
-    // Event Listener for changing the group filter
     filterSelect.addEventListener('change', (e) => {
         currentFilter = e.target.value;
         document.getElementById('current-filter-display').textContent = currentFilter;
         updateDashboard();
     });
 
-    // Helper: Show Toast
-    function showToast() {
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
-    // Main Update Function
     function updateDashboard() {
-        // Apply filter
         const filteredSurveys = currentFilter === 'Tots' 
             ? surveys 
             : surveys.filter(s => s.group === currentFilter);
@@ -80,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderResponses(filteredSurveys);
     }
 
-    // Render KPIs
     function calculateKPIs(data) {
         const total = data.length;
         document.getElementById('kpi-responses').textContent = total;
@@ -103,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('kpi-group').textContent = currentFilter;
     }
 
-    // Render Rating Distribution Bars
     function renderBarCharts(data) {
         const container = document.getElementById('bar-charts-container');
         container.innerHTML = '';
@@ -111,8 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const counts = {1:0, 2:0, 3:0, 4:0, 5:0};
         data.forEach(s => counts[s.rating]++);
         
-        const maxCount = Math.max(...Object.values(counts), 1);
-        const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'];
+        let maxCount = Math.max(...Object.values(counts));
+        if (maxCount === 0) maxCount = 1;
 
         for(let i=1; i<=5; i++) {
             const count = counts[i];
@@ -123,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             row.innerHTML = `
                 <div class="bar-label">${i} estrelles</div>
                 <div class="bar-track">
-                    <div class="bar-fill" style="width: ${width}%; background-color: ${colors[i-1]};"></div>
+                    <div class="bar-fill" style="width: ${width}%;"></div>
                 </div>
                 <div class="bar-count">${count}</div>
             `;
@@ -131,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Render Pure CSS Conic Gradient Pie Charts
     function renderPieCharts(data) {
         const total = data.length;
         const counts = {1:0, 2:0, 3:0, 4:0, 5:0};
@@ -141,9 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const legendScores = document.getElementById('legend-scores');
         legendScores.innerHTML = '';
         
-        const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'];
+        const colors = ['#dc3545', '#fd7e14', '#ffc107', '#20c997', '#198754'];
         
-        // 1. Scores Pie Chart
         if (total > 0) {
             let gradientParts = [];
             let currentPerc = 0;
@@ -164,11 +144,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             pieScores.style.background = `conic-gradient(${gradientParts.join(', ')})`;
         } else {
-            pieScores.style.background = 'conic-gradient(#e2e8f0 0% 100%)';
-            legendScores.innerHTML = '<span>Sense dades</span>';
+            pieScores.style.background = 'conic-gradient(#e9ecef 0% 100%)';
         }
 
-        // 2. Positives Pie Chart
         const piePos = document.getElementById('pie-positives');
         const legendPos = document.getElementById('legend-positives');
         legendPos.innerHTML = '';
@@ -179,25 +157,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const posPerc = (posCount / total) * 100;
             const negPerc = (negCount / total) * 100;
 
-            piePos.style.background = `conic-gradient(#22c55e 0% ${posPerc}%, #f97316 ${posPerc}% 100%)`;
+            piePos.style.background = `conic-gradient(#198754 0% ${posPerc}%, #fd7e14 ${posPerc}% 100%)`;
             
             legendPos.innerHTML = `
                 <div class="legend-item">
-                    <div class="legend-color" style="background-color: #22c55e"></div>
+                    <div class="legend-color" style="background-color: #198754"></div>
                     <span>Positives (4-5): ${posPerc.toFixed(1)}%</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background-color: #f97316"></div>
+                    <div class="legend-color" style="background-color: #fd7e14"></div>
                     <span>No positives (1-3): ${negPerc.toFixed(1)}%</span>
                 </div>
             `;
         } else {
-            piePos.style.background = 'conic-gradient(#e2e8f0 0% 100%)';
-            legendPos.innerHTML = '<span>Sense dades</span>';
+            piePos.style.background = 'conic-gradient(#e9ecef 0% 100%)';
         }
     }
 
-    // Render Comparison Chart between Groups
     function renderComparison() {
         const container = document.getElementById('comparison-container');
         container.innerHTML = '';
@@ -212,51 +188,35 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const width = (avg / 5) * 100;
             const isSelected = group === currentFilter;
-            const bgColor = isSelected ? 'var(--primary)' : '#94a3b8';
             
             const row = document.createElement('div');
             row.className = 'bar-row';
             row.innerHTML = `
-                <div class="bar-label" style="width: 140px;">${group} ${isSelected ? '(seleccionat)' : ''}</div>
+                <div class="bar-label">${group} ${isSelected ? '(seleccionat)' : ''}</div>
                 <div class="bar-track">
-                    <div class="bar-fill" style="width: ${width}%; background-color: ${bgColor};"></div>
+                    <div class="bar-fill" style="width: ${width}%;"></div>
                 </div>
-                <div class="bar-count" style="width: 60px;">${avg.toFixed(2)}/5</div>
+                <div class="bar-count">${avg.toFixed(2)}/5</div>
             `;
             container.appendChild(row);
         });
     }
 
-    // Render List of Responses
     function renderResponses(data) {
         const container = document.getElementById('responses-list');
         container.innerHTML = '';
-        
-        if (data.length === 0) {
-            container.innerHTML = '<p style="color: var(--text-muted)">Encara no hi ha respostes per a aquest grup.</p>';
-            return;
-        }
 
         data.forEach(s => {
-            let colorStyles = '';
-            // Colores semánticos para las tarjetas
-            if (s.rating <= 2) {
-                colorStyles = 'border-left: 4px solid #ef4444; background-color: #fef2f2;';
-            } else if (s.rating === 3) {
-                colorStyles = 'border-left: 4px solid #eab308; background-color: #fefce8;';
-            } else {
-                colorStyles = 'border-left: 4px solid #22c55e; background-color: #f0fdf4;';
-            }
+            let type = 'negative';
+            if (s.rating >= 4) type = 'positive';
+            else if (s.rating === 3) type = 'neutral';
 
             const card = document.createElement('div');
-            card.className = 'response-card';
-            card.style = colorStyles;
+            card.className = `response-card ${type}`;
             card.innerHTML = `
-                <div class="response-header">
-                    <span class="response-group">${s.group}</span>
-                    <span class="response-rating">Puntuació: ${s.rating}/5</span>
-                </div>
-                ${s.comment ? `<p class="response-comment"><strong>Comentari:</strong> ${s.comment}</p>` : ''}
+                <div class="response-group">${s.group}</div>
+                <div class="response-rating">Puntuació: ${s.rating}/5</div>
+                ${s.comment ? `<div class="response-comment">Comentari: ${s.comment}</div>` : ''}
             `;
             container.appendChild(card);
         });
