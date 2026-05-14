@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquesta d'Aula i Analítica</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar / Form -->
+        <aside class="form-section">
+            <h2>Formulari d'enquesta</h2>
+            <form id="survey-form">
+                <div class="form-group">
+                    <label for="group-select">Grup</label>
+                    <select id="group-select" required>
+                        <option value="DAW1A">DAW1A</option>
+                        <option value="DAW1B">DAW1B</option>
+                        <option value="ASIX1">ASIX1</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rating">Satisfacció global (1-5)</label>
+                    <input type="number" id="rating" min="1" max="5" required placeholder="Ex: 4">
+                </div>
+                <div class="form-group">
+                    <label for="comments">Comentari (opcional)</label>
+                    <textarea id="comments" rows="4" placeholder="Què milloraries de la sessió?"></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Guardar resposta</button>
+            </form>
+            <div id="toast" class="toast">Resposta desada correctament!</div>
+        </aside>
+
+        <!-- Main Content / Analytics -->
+        <main class="analytics-section">
+            <header class="analytics-header">
+                <div>
+                    <h2>Panell d'analítica</h2>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-group">Filtre del panell</label>
+                    <select id="filter-group">
+                        <option value="Tots">Tots</option>
+                        <option value="DAW1A" selected>DAW1A</option>
+                        <option value="DAW1B">DAW1B</option>
+                        <option value="ASIX1">ASIX1</option>
+                    </select>
+                </div>
+                <p class="filter-status">Mostrant dades del grup seleccionat al formulari: <strong id="current-filter-display">DAW1A</strong></p>
+            </header>
+
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <span class="kpi-label">Respostes</span>
+                    <span class="kpi-value" id="kpi-responses">0</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Mitjana</span>
+                    <span class="kpi-value" id="kpi-average">0.00</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">% 4 o 5</span>
+                    <span class="kpi-value" id="kpi-positives">0.0%</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Grup analitzat</span>
+                    <span class="kpi-value" id="kpi-group">DAW1A</span>
+                </div>
+            </div>
+
+            <section class="chart-section">
+                <h3>Distribució de valoracions</h3>
+                <div class="bar-charts" id="bar-charts-container">
+                    <!-- Bars injected via JS -->
+                </div>
+            </section>
+
+            <section class="chart-section pie-section-wrapper">
+                <h3>Gràfics de quesito</h3>
+                <div class="pie-charts-container">
+                    <div class="pie-card">
+                        <h4>Quesito de puntuacions</h4>
+                        <div class="pie-content">
+                            <div class="pie-chart" id="pie-scores"></div>
+                            <div class="pie-legend" id="legend-scores"></div>
+                        </div>
+                    </div>
+                    <div class="pie-card">
+                        <h4>Quesito positives (4-5)</h4>
+                        <div class="pie-content">
+                            <div class="pie-chart" id="pie-positives"></div>
+                            <div class="pie-legend" id="legend-positives"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="chart-section">
+                <h3>Comparativa de mitjana per grup</h3>
+                <div class="comparison-charts" id="comparison-container">
+                    <!-- Comparison bars injected via JS -->
+                </div>
+            </section>
+
+            <section class="responses-section">
+                <h3>Últimes respostes</h3>
+                <div class="responses-list" id="responses-list">
+                    <!-- Response cards injected via JS -->
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
