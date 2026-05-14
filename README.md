@@ -11,6 +11,7 @@ L'objectiu d'aquest projecte és desenvolupar una aplicació web d'enquesta d'au
   - El fons principal gris clar (`#f8f9fa`) fa ressaltar els panells d'informació amb fons blanc, atorgant un contrast suau i professional.
 - **Gràfics Dinàmics Sense Llibreries Externes:** Per complir amb la condició de no usar tecnologies addicionals tipus Chart.js, s'ha abordat la creació dels gràfics de "quesito" mitjançant **lògica en JavaScript que genera un `conic-gradient` de CSS**.
 - **Arquitectura JavaScript Reactiva:** El codi de `app.js` gestiona l'estat en un *Array* global. Qualsevol interacció de l'usuari (guardar un vot o canviar el filtre) crida a `updateDashboard()`, que s'encarrega d'esborrar i regenerar dinàmicament el DOM per mostrar les estadístiques sempre actualitzades.
+- **Dades Inicials (Seed Data):** S'ha poblat l'estat inicial de l'array amb el conjunt exacte de comentaris i puntuacions proporcionades de mostra (12 respostes per a DAW1A), garantint així que tant el llistat de targetes com els càlculs estadístics mostren resultats idèntics a l'enunciat des del primer moment.
 
 ## Planificació i Estat dels Sprints (Scrum) 📋
 
