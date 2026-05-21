@@ -1,28 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial data matching the screenshot exactly
+    // Initial data matching the screenshot exactly, now including dates
     let surveys = [
-        { group: 'DAW1A', rating: 4, comment: 'La part de conclusions és interessant.' },
-        { group: 'DAW1A', rating: 3, comment: 'Em va costar la part de gràfics.' },
-        { group: 'DAW1A', rating: 4, comment: 'Les demos han ajudat molt.' },
-        { group: 'DAW1A', rating: 5, comment: 'Molt bona feina del professorat.' },
-        { group: 'DAW1A', rating: 2, comment: 'Hauria anat bé més feedback individual.' },
-        { group: 'DAW1A', rating: 4, comment: 'Contingut ben estructurat.' },
-        { group: 'DAW1A', rating: 3, comment: 'Faltaven més casos reals.' },
-        { group: 'DAW1A', rating: 5, comment: "Genial per entendre l'analítica." },
-        { group: 'DAW1A', rating: 5, comment: "Activitat molt útil per l'examen." },
-        { group: 'DAW1A', rating: 3, comment: 'Caldria més exemples guiats.' },
-        { group: 'DAW1A', rating: 2, comment: 'Sense comentari' },
-        { group: 'DAW1A', rating: 4, comment: 'Sessió clara i pràctica.' },
+        { group: 'DAW1A', rating: 4, comment: 'La part de conclusions és interessant.', date: '21/05/2026 16:30' },
+        { group: 'DAW1A', rating: 3, comment: 'Em va costar la part de gràfics.', date: '21/05/2026 16:15' },
+        { group: 'DAW1A', rating: 4, comment: 'Les demos han ajudat molt.', date: '21/05/2026 16:00' },
+        { group: 'DAW1A', rating: 5, comment: 'Molt bona feina del professorat.', date: '21/05/2026 15:45' },
+        { group: 'DAW1A', rating: 2, comment: 'Hauria anat bé més feedback individual.', date: '21/05/2026 15:30' },
+        { group: 'DAW1A', rating: 4, comment: 'Contingut ben estructurat.', date: '21/05/2026 15:15' },
+        { group: 'DAW1A', rating: 3, comment: 'Faltaven més casos reals.', date: '21/05/2026 15:00' },
+        { group: 'DAW1A', rating: 5, comment: "Genial per entendre l'analítica.", date: '21/05/2026 14:45' },
+        { group: 'DAW1A', rating: 5, comment: "Activitat molt útil per l'examen.", date: '21/05/2026 14:30' },
+        { group: 'DAW1A', rating: 3, comment: 'Caldria més exemples guiats.', date: '21/05/2026 14:15' },
+        { group: 'DAW1A', rating: 2, comment: 'Sense comentari', date: '21/05/2026 14:00' },
+        { group: 'DAW1A', rating: 4, comment: 'Sessió clara i pràctica.', date: '21/05/2026 13:45' },
         
-        { group: 'DAW1B', rating: 4, comment: 'Bé.' },
-        { group: 'DAW1B', rating: 3, comment: 'Normal.' },
-        { group: 'ASIX1', rating: 5, comment: 'Molt útil.' },
-        { group: 'ASIX1', rating: 2, comment: 'No he entès res.' }
+        { group: 'DAW1B', rating: 4, comment: 'Bé.', date: '21/05/2026 12:30' },
+        { group: 'DAW1B', rating: 3, comment: 'Normal.', date: '21/05/2026 12:15' },
+        { group: 'ASIX1', rating: 5, comment: 'Molt útil.', date: '21/05/2026 11:00' },
+        { group: 'ASIX1', rating: 2, comment: 'No he entès res.', date: '21/05/2026 10:45' }
     ];
 
     const groups = ['DAW1A', 'DAW1B', 'ASIX1'];
     
-    let currentFilter = 'DAW1A';
+    let currentFilter = 'Tots';
 
     const form = document.getElementById('survey-form');
     const filterSelect = document.getElementById('filter-group');
@@ -31,14 +31,24 @@ document.addEventListener('DOMContentLoaded', () => {
     
     updateDashboard();
 
+    function formatDate(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+    }
+
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         
         const group = document.getElementById('group-select').value;
         const rating = parseInt(document.getElementById('rating').value);
-        const comment = document.getElementById('comments').value;
+        const comment = document.getElementById('comments').value.trim();
+        const date = formatDate(new Date());
 
-        surveys.unshift({ group, rating, comment });
+        surveys.unshift({ group, rating, comment, date });
         
         form.reset();
         document.getElementById('group-select').value = group;
@@ -48,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     filterSelect.addEventListener('change', (e) => {
         currentFilter = e.target.value;
-        document.getElementById('current-filter-display').textContent = currentFilter;
         updateDashboard();
     });
 
@@ -57,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ? surveys 
             : surveys.filter(s => s.group === currentFilter);
 
+        document.getElementById('current-filter-display').textContent = currentFilter;
         calculateKPIs(filteredSurveys);
         renderBarCharts(filteredSurveys);
         renderPieCharts(filteredSurveys);
@@ -214,7 +224,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = `response-card ${type}`;
             card.innerHTML = `
-                <div class="response-group">${s.group}</div>
+                <div class="response-header">
+                    <span class="response-group">${s.group}</span>
+                    <span class="response-date">${s.date || ''}</span>
+                </div>
                 <div class="response-rating">Puntuació: ${s.rating}/5</div>
                 ${s.comment ? `<div class="response-comment">Comentari: ${s.comment}</div>` : ''}
             `;
