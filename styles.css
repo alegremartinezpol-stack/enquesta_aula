@@ -381,6 +381,26 @@ input[type="number"]:focus, select:focus, textarea:focus {
     line-height: 1.45;
 }
 
+/* Conclusions */
+.conclusions-box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 24px;
+}
+
+.conclusion-text {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.55;
+    margin: 0;
+}
+
+.conclusion-text:first-child {
+    margin-bottom: 14px;
+}
+
 /* Adaptabilitat (Responsive) */
 @media (max-width: 820px) {
     body {

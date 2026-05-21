@@ -1,57 +1,126 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial data matching the screenshot exactly, now including dates
-    let surveys = [
-        { group: 'DAW1A', rating: 4, comment: 'La part de conclusions és interessant.', date: '21/05/2026 16:30' },
-        { group: 'DAW1A', rating: 3, comment: 'Em va costar la part de gràfics.', date: '21/05/2026 16:15' },
-        { group: 'DAW1A', rating: 4, comment: 'Les demos han ajudat molt.', date: '21/05/2026 16:00' },
-        { group: 'DAW1A', rating: 5, comment: 'Molt bona feina del professorat.', date: '21/05/2026 15:45' },
-        { group: 'DAW1A', rating: 2, comment: 'Hauria anat bé més feedback individual.', date: '21/05/2026 15:30' },
-        { group: 'DAW1A', rating: 4, comment: 'Contingut ben estructurat.', date: '21/05/2026 15:15' },
-        { group: 'DAW1A', rating: 3, comment: 'Faltaven més casos reals.', date: '21/05/2026 15:00' },
-        { group: 'DAW1A', rating: 5, comment: "Genial per entendre l'analítica.", date: '21/05/2026 14:45' },
-        { group: 'DAW1A', rating: 5, comment: "Activitat molt útil per l'examen.", date: '21/05/2026 14:30' },
-        { group: 'DAW1A', rating: 3, comment: 'Caldria més exemples guiats.', date: '21/05/2026 14:15' },
-        { group: 'DAW1A', rating: 2, comment: 'Sense comentari', date: '21/05/2026 14:00' },
-        { group: 'DAW1A', rating: 4, comment: 'Sessió clara i pràctica.', date: '21/05/2026 13:45' },
+    // Credencials de Supabase (Reemplaça-les amb les teves)
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+    let supabaseClient = null;
+    if (typeof supabase !== 'undefined' && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+
+    // Dades inicials en català (Seed Data) amb format ISO
+    let respostes = [
+        { id: 1, grup: 'DAW1A', puntuacio: 4, comentari: 'La part de conclusions és interessant.', data: '2026-05-21T16:30:00' },
+        { id: 2, grup: 'DAW1A', puntuacio: 3, comentari: 'Em va costar la part de gràfics.', data: '2026-05-21T16:15:00' },
+        { id: 3, grup: 'DAW1A', puntuacio: 4, comentari: 'Les demos han ajudat molt.', data: '2026-05-21T16:00:00' },
+        { id: 4, grup: 'DAW1A', puntuacio: 5, comentari: 'Molt bona feina del professorat.', data: '2026-05-21T15:45:00' },
+        { id: 5, grup: 'DAW1A', puntuacio: 2, comentari: 'Hauria anat bé més feedback individual.', data: '2026-05-21T15:30:00' },
+        { id: 6, grup: 'DAW1A', puntuacio: 4, comentari: 'Contingut ben estructurat.', data: '2026-05-21T15:15:00' },
+        { id: 7, grup: 'DAW1A', puntuacio: 3, comentari: 'Faltaven més casos reals.', data: '2026-05-21T15:00:00' },
+        { id: 8, grup: 'DAW1A', puntuacio: 5, comentari: "Genial per entendre l'analítica.", data: '2026-05-21T14:45:00' },
+        { id: 9, grup: 'DAW1A', puntuacio: 5, comentari: "Activitat molt útil per l'examen.", data: '2026-05-21T14:30:00' },
+        { id: 10, grup: 'DAW1A', puntuacio: 3, comentari: 'Caldria més exemples guiats.', data: '2026-05-21T14:15:00' },
+        { id: 11, grup: 'DAW1A', puntuacio: 2, comentari: 'Sense comentari', data: '2026-05-21T14:00:00' },
+        { id: 12, grup: 'DAW1A', puntuacio: 4, comentari: 'Sessió clara i pràctica.', data: '2026-05-21T13:45:00' },
         
-        { group: 'DAW1B', rating: 4, comment: 'Bé.', date: '21/05/2026 12:30' },
-        { group: 'DAW1B', rating: 3, comment: 'Normal.', date: '21/05/2026 12:15' },
-        { group: 'ASIX1', rating: 5, comment: 'Molt útil.', date: '21/05/2026 11:00' },
-        { group: 'ASIX1', rating: 2, comment: 'No he entès res.', date: '21/05/2026 10:45' }
+        { id: 13, grup: 'DAW1B', puntuacio: 4, comentari: 'Bé.', data: '2026-05-21T12:30:00' },
+        { id: 14, grup: 'DAW1B', puntuacio: 3, comentari: 'Normal.', data: '2026-05-21T12:15:00' },
+        { id: 15, grup: 'ASIX1', puntuacio: 5, comentari: 'Molt útil.', data: '2026-05-21T11:00:00' },
+        { id: 16, grup: 'ASIX1', puntuacio: 2, comentari: 'No he entès res.', data: '2026-05-21T10:45:00' }
     ];
 
     const groups = ['DAW1A', 'DAW1B', 'ASIX1'];
-    
     let currentFilter = 'Tots';
 
     const form = document.getElementById('survey-form');
     const filterSelect = document.getElementById('filter-group');
     
     filterSelect.value = currentFilter;
-    
-    updateDashboard();
 
-    function formatDate(date) {
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        return `${day}/${month}/${year} ${hours}:${minutes}`;
+    // Funció per carregar les respostes de Supabase (o mantenir locals)
+    async function carregarDades() {
+        if (supabaseClient) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('respostes')
+                    .select('*')
+                    .order('data', { ascending: false });
+                
+                if (error) throw error;
+                if (data) {
+                    respostes = data;
+                }
+            } catch (err) {
+                console.warn("No s'han pogut obtenir dades de Supabase (comprova la consola SQL). Usant dades locals.", err);
+            }
+        }
+        updateDashboard();
     }
 
-    form.addEventListener('submit', (e) => {
+    // Inicialitzar dades
+    carregarDades();
+
+    // Funció auxiliar per formatar data per a la interfície (DD/MM/YYYY HH:mm)
+    function formatUIDate(dateStr) {
+        if (!dateStr) return '';
+        try {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return dateStr;
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        } catch (e) {
+            return dateStr;
+        }
+    }
+
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const group = document.getElementById('group-select').value;
-        const rating = parseInt(document.getElementById('rating').value);
-        const comment = document.getElementById('comments').value.trim();
-        const date = formatDate(new Date());
+        const grup = document.getElementById('group-select').value;
+        const puntuacio = parseInt(document.getElementById('rating').value);
+        const comentari = document.getElementById('comments').value.trim();
+        
+        // Obtenir data actual en format ISO local (YYYY-MM-DDTHH:mm:ss)
+        const ara = new Date();
+        const offsetMs = ara.getTimezoneOffset() * 60 * 1000;
+        const dataLocal = new Date(ara.getTime() - offsetMs).toISOString().slice(0, 19);
 
-        surveys.unshift({ group, rating, comment, date });
+        const novaResposta = {
+            grup,
+            puntuacio,
+            comentari,
+            data: dataLocal
+        };
+
+        if (supabaseClient) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('respostes')
+                    .insert([novaResposta])
+                    .select();
+                
+                if (error) throw error;
+                if (data && data.length > 0) {
+                    respostes.unshift(data[0]);
+                }
+            } catch (err) {
+                console.error("Error inserint a Supabase:", err.message);
+                // Fallback local si falla la connexió o no existeix la taula
+                const nouId = respostes.length > 0 ? Math.max(...respostes.map(r => r.id)) + 1 : 1;
+                respostes.unshift({ id: nouId, ...novaResposta });
+            }
+        } else {
+            // Fallback local si no està configurat Supabase
+            const nouId = respostes.length > 0 ? Math.max(...respostes.map(r => r.id)) + 1 : 1;
+            respostes.unshift({ id: nouId, ...novaResposta });
+        }
         
         form.reset();
-        document.getElementById('group-select').value = group;
+        document.getElementById('group-select').value = grup;
         
         updateDashboard();
     });
@@ -63,8 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateDashboard() {
         const filteredSurveys = currentFilter === 'Tots' 
-            ? surveys 
-            : surveys.filter(s => s.group === currentFilter);
+            ? respostes 
+            : respostes.filter(s => s.grup === currentFilter);
 
         document.getElementById('current-filter-display').textContent = currentFilter;
         calculateKPIs(filteredSurveys);
@@ -85,11 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const sum = data.reduce((acc, curr) => acc + curr.rating, 0);
+        const sum = data.reduce((acc, curr) => acc + curr.puntuacio, 0);
         const avg = sum / total;
         document.getElementById('kpi-average').textContent = avg.toFixed(2);
 
-        const positives = data.filter(s => s.rating >= 4).length;
+        const positives = data.filter(s => s.puntuacio >= 4).length;
         const posPerc = (positives / total) * 100;
         document.getElementById('kpi-positives').textContent = posPerc.toFixed(1) + '%';
         
@@ -101,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
         
         const counts = {1:0, 2:0, 3:0, 4:0, 5:0};
-        data.forEach(s => counts[s.rating]++);
+        data.forEach(s => counts[s.puntuacio]++);
         
         let maxCount = Math.max(...Object.values(counts));
         if (maxCount === 0) maxCount = 1;
@@ -126,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderPieCharts(data) {
         const total = data.length;
         const counts = {1:0, 2:0, 3:0, 4:0, 5:0};
-        data.forEach(s => counts[s.rating]++);
+        data.forEach(s => counts[s.puntuacio]++);
         
         const pieScores = document.getElementById('pie-scores');
         const legendScores = document.getElementById('legend-scores');
@@ -189,10 +258,10 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
         
         groups.forEach(group => {
-            const groupSurveys = surveys.filter(s => s.group === group);
+            const groupSurveys = respostes.filter(s => s.grup === group);
             let avg = 0;
             if (groupSurveys.length > 0) {
-                const sum = groupSurveys.reduce((acc, curr) => acc + curr.rating, 0);
+                const sum = groupSurveys.reduce((acc, curr) => acc + curr.puntuacio, 0);
                 avg = sum / groupSurveys.length;
             }
             
@@ -218,18 +287,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data.forEach(s => {
             let type = 'negative';
-            if (s.rating >= 4) type = 'positive';
-            else if (s.rating === 3) type = 'neutral';
+            if (s.puntuacio >= 4) type = 'positive';
+            else if (s.puntuacio === 3) type = 'neutral';
 
             const card = document.createElement('div');
             card.className = `response-card ${type}`;
             card.innerHTML = `
                 <div class="response-header">
-                    <span class="response-group">${s.group}</span>
-                    <span class="response-date">${s.date || ''}</span>
+                    <span class="response-group">${s.grup}</span>
+                    <span class="response-date">${formatUIDate(s.data)}</span>
                 </div>
-                <div class="response-rating">Puntuació: ${s.rating}/5</div>
-                ${s.comment ? `<div class="response-comment">Comentari: ${s.comment}</div>` : ''}
+                <div class="response-rating">Puntuació: ${s.puntuacio}/5</div>
+                ${s.comentari ? `<div class="response-comment">${s.comentari}</div>` : ''}
             `;
             container.appendChild(card);
         });
