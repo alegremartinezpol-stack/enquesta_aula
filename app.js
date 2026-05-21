@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Credencials de Supabase (Reemplaça-les amb les teves)
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const SUPABASE_URL = 'https://jyuovcpelfpvarkiewdg.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5dW92Y3BlbGZwdmFya2lld2RnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjYzMTgsImV4cCI6MjA5NDk0MjMxOH0.biqFpbgjm7EJaRTLPXMmR_XPfzSHVcmVXek8sezAeKs';
 
     let supabaseClient = null;
     if (typeof supabase !== 'undefined' && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
